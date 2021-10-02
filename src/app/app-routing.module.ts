@@ -1,7 +1,28 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CoursesComponent } from './courses/courses.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: 'dashboard', // localhost:4200/dashboard
+    component: DashboardComponent
+  },
+  {
+    path: 'navbar', // localhost:4200/navbar
+    component: NavbarComponent
+  },
+  {
+    path: 'sidenav', // localhost:4200/sidenav
+    component: SidenavComponent
+  },
+  {
+    path: 'courses',
+    component: CoursesComponent
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -9,6 +9,12 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "sourceMap": true,
+    "paths": {
+      "mi-boton": [
+        "dist/mi-boton/mi-boton",
+        "dist/mi-boton"
+      ]
+    },
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
