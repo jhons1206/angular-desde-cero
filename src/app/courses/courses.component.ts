@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Curso } from '../curso';
 import { InterfaceCurso } from '../interface-curso';
 import { CoursesService } from './courses.service';
+import { catchError, tap } from 'rxjs/operators';
+import { EMPTY, of } from 'rxjs';
 
 @Component({
   selector: 'ed-courses',
@@ -22,7 +24,8 @@ export class CoursesComponent implements OnInit, AfterViewInit {
     console.log('textoFiltro', t);
     this._textoFiltro = t;
     // filtrar los cursos
-    this.cursos = t? this.filtrarCursos(t): this.cursosService.getCourses();
+    this.filtrarCursos(t);
+    // this.cursos = t? this.filtrarCursos(t): this.cursosService.getCourses();
   }
 
   // Se ejecuta el atributo _textoFiltro es de solo lectura
@@ -32,24 +35,40 @@ export class CoursesComponent implements OnInit, AfterViewInit {
 
 
   cursos: InterfaceCurso[] = [];
+  cursosFiltrados: InterfaceCurso[] = [];
+  mensajeError: string | undefined;
 
   constructor(private router: Router, private cursosService: CoursesService) {
     // this.eliminarCursos();
   }
 
   ngOnInit(): void {
-    this.cursos = this.cursosService.getCourses();
-    setTimeout(() => {
-      this.textoFiltro = 'cero';
-    }, 1000);
+    this.getCursos();
+
+  }
+
+  getCursos() {
+    this.cursosService.getCursos()
+    .pipe(
+      tap(cursos => console.log('Cursos', cursos)),
+      catchError(error => {
+        this.mensajeError = error;
+        // catch and replace
+        return EMPTY;
+      })
+    )
+    .subscribe((cursos: InterfaceCurso[]) => {
+      this.cursos = cursos;
+      this.cursosFiltrados = cursos;
+    });
   }
 
   ngAfterViewInit() {
-    this.filtro.nativeElement.value = 'Angular';
+    // this.filtro.nativeElement.value = 'Angular';
   }
 
   filtrarCursos(texto: string) {
-    return this.cursos.filter((curso: InterfaceCurso) => curso.name.toLowerCase().indexOf(texto.toLowerCase()) >= 0);
+    this.cursosFiltrados = this.cursos.filter((curso: InterfaceCurso) => curso.name.toLowerCase().indexOf(texto.toLowerCase()) >= 0);
   }
 
   eliminarCursos() {
